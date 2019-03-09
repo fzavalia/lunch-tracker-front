@@ -1,26 +1,19 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import UserSelection from './views/UserSelection';
+import Main from './views/Main';
+import NewExpense from './views/NewExpense';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Router>
+        <Switch>
+          <Route path='/user' component={UserSelection}/>
+          <Route path='/main' render={props => <Main onExpenseButtonClick={() => props.history.push('/expense')} />} />
+          <Route path='/expense' render={props => <NewExpense onSubmitExpense={() => props.history.push('/main')} />} />
+        </Switch>
+      </Router>
     );
   }
 }
