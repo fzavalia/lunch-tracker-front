@@ -1,5 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core'
+import api from '../api';
+
+const useUsers = (page, perPage) => {
+
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    api.user.list(page, perPage)
+      .then(setUsers)
+  }, [page, perPage])
+
+  return users
+}
 
 const UserSelectionContainer = ({ history }) =>
   <UserSelection
@@ -8,11 +21,7 @@ const UserSelectionContainer = ({ history }) =>
         history.push('/main')
       }
     }}
-    users={[
-      { id: 1, name: 'Fernando Zavalia' },
-      { id: 2, name: 'Santiago Toscano' },
-      { id: 3, name: 'Hernando Scheidl' }
-    ]}
+    users={useUsers(1, 99)}
   />
 
 const UserSelection = ({ onContinue, users }) => {
