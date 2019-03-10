@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Typography, Button } from '@material-ui/core'
 import moment from 'moment';
+import useCurrentUser from '../hooks/useCurrentUser';
 
 const months = [
   'Enero',
@@ -21,9 +22,11 @@ const MainContainer = ({ history }) => {
 
   const now = moment()
 
+  const currentUser = useCurrentUser()
+
   return (
     <Main
-      user='Fernando Zavalia'
+      user={currentUser.name}
       year={now.year()}
       month={months[now.month()]}
       budget='15000'
@@ -33,7 +36,6 @@ const MainContainer = ({ history }) => {
     />
   )
 }
-
 
 const Main = ({ user, year, month, budget, remaining, myExpenses, onExpenseButtonClick }) =>
   <>

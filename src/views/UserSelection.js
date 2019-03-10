@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Select, MenuItem, FormControl, InputLabel, Typography } from '@material-ui/core'
 import api from '../api';
+import { setCurrentUser } from '../hooks/useCurrentUser';
 
 const useUsers = (page, perPage) => {
 
@@ -16,9 +17,10 @@ const useUsers = (page, perPage) => {
 
 const UserSelectionContainer = ({ history }) =>
   <UserSelection
-    onUserSelected={(user) => {
+    onUserSelected={user => {
       if (user) {
         history.push('/main')
+        setCurrentUser(user)
       }
     }}
     onCreateUser={() => {
@@ -37,7 +39,7 @@ const UserSelection = ({ onUserSelected, onCreateUser, users }) => {
       <FormControl style={{ marginBottom: 10 }} fullWidth>
         <InputLabel>Elija el usuario con el cual ingresar</InputLabel>
         <Select value={user} onChange={e => setUser(e.target.value)}>
-          {users.map(user => <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>)}
+          {users.map(user => <MenuItem key={user.id} value={user}>{user.name}</MenuItem>)}
         </Select>
       </FormControl>
       <Button style={{ width: '100%', marginBottom: 10 }} onClick={() => onUserSelected(user)} variant='contained' color='primary'>Ingresar</Button>

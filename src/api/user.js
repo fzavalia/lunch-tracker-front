@@ -2,8 +2,16 @@ import fetch from 'superagent'
 
 export default host => ({
 
-  list: (page, perPage) => fetch.get(`${host}/users?page=${page}&perPage=${perPage}`).then(res => res.body),
+  show: (id) =>
+    fetch.get(`${host}/users/${id}`)
+      .then(res => res.body),
 
-  create: (name) => fetch.post(`${host}/users`).send({ name }).then(res => res.body)
+  list: (page, perPage) =>
+    fetch.get(`${host}/users?page=${page}&perPage=${perPage}`)
+      .then(res => res.body),
 
+  create: (name) =>
+    fetch.post(`${host}/users`)
+      .send({ name })
+      .then(res => res.body)
 })
