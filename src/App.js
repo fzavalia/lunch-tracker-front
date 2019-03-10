@@ -10,11 +10,11 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path='/user/create' component={CreateUser}/>
-          <Route path='/user' component={UserSelection}/>
+          <Route path='/users/create' component={CreateUser}/>
+          <Route path='/users' component={UserSelection}/>
           <Route path='/main' render={props => <Main onExpenseButtonClick={() => props.history.push('/expense')} />} />
           <Route path='/expense' render={props => <NewExpense onSubmitExpense={() => props.history.push('/main')} />} />
-          <Route render={() => <Redirect to='/user' />} />
+          <Route render={() => <Redirect to='/users' />} />
         </Switch>
       </Router>
     );

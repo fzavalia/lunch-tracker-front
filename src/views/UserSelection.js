@@ -16,15 +16,18 @@ const useUsers = (page, perPage) => {
 
 const UserSelectionContainer = ({ history }) =>
   <UserSelection
-    onContinue={(user) => {
+    onUserSelected={(user) => {
       if (user) {
         history.push('/main')
       }
     }}
+    onCreateUser={() => {
+      history.push('/users/create')
+    }}
     users={useUsers(1, 99)}
   />
 
-const UserSelection = ({ onContinue, users }) => {
+const UserSelection = ({ onUserSelected, onCreateUser, users }) => {
 
   const [user, setUser] = useState('')
 
@@ -36,7 +39,8 @@ const UserSelection = ({ onContinue, users }) => {
           {users.map(user => <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>)}
         </Select>
       </FormControl>
-      <Button onClick={() => onContinue(user)} style={{ width: '100%' }} variant='contained' color='primary'>Continuar</Button>
+      <Button onClick={() => onUserSelected(user)} style={{ width: '100%' }} variant='contained' color='primary'>Continuar</Button>
+      <Button onClick={onCreateUser} style={{ width: '100%' }} variant='contained' color='primary'>Crear Usuario</Button>
     </>
   )
 }
