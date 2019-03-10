@@ -36,7 +36,7 @@ const App = () => {
         <Route exact path='/users' component={UserSelection} />
         <Route exact path='/users/create' component={CreateUser} />
         <Route exact path='/main' component={Main} />
-        <Route exact path='/expense' render={props => <NewExpense onSubmitExpense={() => props.history.push('/main')} />} />
+        <Route exact path='/expenses/create' render={props => <NewExpense onSubmitExpense={() => props.history.push('/main')} />} />
         <Route render={() => <Redirect to='/main' />} />
       </Switch>
     </Router>
