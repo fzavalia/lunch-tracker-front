@@ -32,12 +32,13 @@ const MainContainer = ({ history }) => {
       budget='15000'
       remaining='12000'
       myExpenses='1340'
-      onExpenseButtonClick={() => history.push('/expenses')}
+      onNewExpense={() => history.push('/expenses')}
+      onChangeUser={() => history.push('/users')}
     />
   )
 }
 
-const Main = ({ user, year, month, budget, remaining, myExpenses, onExpenseButtonClick }) =>
+const Main = ({ user, year, month, budget, remaining, myExpenses, onChangeUser, onNewExpense }) =>
   <>
     <Value label='Usuario' value={user} />
     <Value label='Año' value={year} />
@@ -45,7 +46,8 @@ const Main = ({ user, year, month, budget, remaining, myExpenses, onExpenseButto
     <Value label='Presupuesto' value={budget} />
     <Value label='Gastado' value={remaining} />
     <Value label='Mis Gastos' value={myExpenses} />
-    <ExpenseButton onClick={onExpenseButtonClick} />
+    <Button style={{ width: '100%', marginBottom: 10 }} onClick={onChangeUser} variant='contained' color='primary'>Cambiar de Usuario</Button>
+    <Button style={{ width: '100%' }} onClick={onNewExpense} variant='contained' color='primary'>Nuevo Gasto</Button>
   </>
 
 const Value = ({ label, value }) =>
@@ -53,7 +55,5 @@ const Value = ({ label, value }) =>
     <Typography style={{ alignSelf: 'flex-end' }} variant='body2'>{label}</Typography>
     <Typography variant='body2'>{value}</Typography>
   </div>
-
-const ExpenseButton = ({ onClick }) => <Button onClick={onClick} style={{ width: '100%' }} variant='contained' color='primary'>Nuevo Gasto</Button>
 
 export default MainContainer
