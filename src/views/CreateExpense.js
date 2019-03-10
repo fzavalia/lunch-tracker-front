@@ -1,25 +1,15 @@
 import React, { useState } from 'react';
-import { Button, Select, MenuItem, FormControl, InputLabel, TextField } from '@material-ui/core'
+import { Button, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core'
+import TextField from '../components/TextField';
 
 const NewExpense = ({ onSubmitExpense }) => {
 
   const [expense, setExpense] = useState(0)
   const [restaurant, setRestaurant] = useState('')
 
-  const onChange = e => {
-
-    let value = e.target.value
-
-    if (!value) {
-      setExpense(value)
-    } else {
-      setExpense(Math.max(0, e.target.value))
-    }
-  }
-
   return (
     <>
-      <TextField value={expense} type='number' onChange={onChange} label='Ingrese el monto del gasto' fullWidth />
+      <TextField value={expense} type='positiveNumber' onChange={e => setExpense(e.target.value)} label='Ingrese el monto del gasto' fullWidth />
       <FormControl fullWidth>
         <InputLabel>Seleccione el Restaurant</InputLabel>
         <Select value={restaurant} onChange={e => setRestaurant(e.target.value)}>

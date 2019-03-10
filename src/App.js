@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import UserSelection from './views/UserSelection';
 import Main from './views/Main';
-import NewExpense from './views/NewExpense';
+import NewExpense from './views/CreateExpense';
 import CreateUser from './views/CreateUser';
 import useCurrentUser, { loadPersistedUser } from './hooks/useCurrentUser';
 
