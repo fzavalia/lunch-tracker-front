@@ -5,7 +5,7 @@ const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', '
 export default host => ({
 
   findForYearAndMonth: (year, month) =>
-    fetch.get(`${host}/budgets?page=1&perPage=1&year=${year}&month=${months(month)}`)
+    fetch.get(`${host}/budgets?page=1&perPage=1&year=${year}&month=${months[month]}`)
       .then(res => res.body)
       .then(res => res[0]),
 
