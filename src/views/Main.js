@@ -3,21 +3,7 @@ import { Typography, Button } from '@material-ui/core'
 import moment from 'moment';
 import useCurrentUser from '../hooks/useCurrentUser';
 import api from '../api';
-
-const months = [
-  'Enero',
-  'Febrero',
-  'Marzo',
-  'Abril',
-  'Mayo',
-  'Junio',
-  'Julio',
-  'Agosto',
-  'Septiembre',
-  'Octubre',
-  'Noviembre',
-  'Diciembre'
-]
+import { months } from '../constants';
 
 const useMainData = (year, month) => {
 

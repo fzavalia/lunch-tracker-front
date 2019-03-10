@@ -8,20 +8,20 @@ const mapType = type => {
   return type
 }
 
-const handleChange = (e, type) => {
+const handleChange = (e, type, onChange) => {
   if (type === 'positiveNumber') {
     const value = e.target.value
     if (value) {
       e.target.value = Math.max(0, value)
     }
   }
-  return e
+  onChange(e)
 }
 
 const TextField = ({ type, onChange, ...props }) =>
   <MaterialTextField {...props}
     type={mapType(type)}
-    onChange={e => handleChange(e, type)}
+    onChange={e => handleChange(e, type, onChange)}
   />
 
 export default TextField
