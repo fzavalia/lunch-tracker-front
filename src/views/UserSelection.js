@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core'
+import { Button, Select, MenuItem, FormControl, InputLabel, Typography } from '@material-ui/core'
 import api from '../api';
 
 const useUsers = (page, perPage) => {
@@ -33,14 +33,15 @@ const UserSelection = ({ onUserSelected, onCreateUser, users }) => {
 
   return (
     <>
-      <FormControl fullWidth>
+      <Typography style={{ marginBottom: 10 }} variant='h4' align='center'>Seleccionar Usuario</Typography>
+      <FormControl style={{ marginBottom: 10 }} fullWidth>
         <InputLabel>Elija el usuario con el cual ingresar</InputLabel>
         <Select value={user} onChange={e => setUser(e.target.value)}>
           {users.map(user => <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>)}
         </Select>
       </FormControl>
-      <Button onClick={() => onUserSelected(user)} style={{ width: '100%' }} variant='contained' color='primary'>Continuar</Button>
-      <Button onClick={onCreateUser} style={{ width: '100%' }} variant='contained' color='primary'>Crear Usuario</Button>
+      <Button style={{ width: '100%', marginBottom: 10 }} onClick={() => onUserSelected(user)} variant='contained' color='primary'>Ingresar</Button>
+      <Button style={{ width: '100%' }} onClick={onCreateUser} variant='contained' color='primary'>Crear Usuario</Button>
     </>
   )
 }

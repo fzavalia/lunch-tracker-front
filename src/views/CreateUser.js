@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, Typography } from '@material-ui/core';
 import api from '../api';
 
 const CreateUserContainer = ({ history }) => <CreateUser onSubmit={(name) =>
@@ -12,8 +12,9 @@ const CreateUser = ({ onSubmit }) => {
 
   return (
     <>
-      <TextField label='Nombre' value={name} onChange={e => setName(e.target.value)} fullWidth />
-      <Button onClick={() => onSubmit(name)} style={{ width: '100%' }} variant='contained' color='primary'>Enviar</Button>
+      <Typography style={{ marginBottom: 10 }} variant='h4' align='center'>Crear Usuario</Typography>
+      <TextField style={{ marginBottom: 10 }} label='Nombre' value={name} onChange={e => setName(e.target.value)} fullWidth />
+      <Button style={{ width: '100%' }} onClick={() => onSubmit(name)} variant='contained' color='primary'>Enviar</Button>
     </>
   )
 }
