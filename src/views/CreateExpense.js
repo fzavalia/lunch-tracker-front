@@ -3,6 +3,7 @@ import { Button, Select, MenuItem, FormControl, InputLabel, Typography } from '@
 import TextField from '../components/TextField';
 import { DatePicker } from 'material-ui-pickers'
 import api from '../api';
+import useCurrentUser from '../hooks/useCurrentUser';
 
 const useRestaurants = () => {
 
@@ -16,17 +17,26 @@ const useRestaurants = () => {
   return restaurants
 }
 
-const NewExpenseContainer = ({ history }) =>
-  <NewExpense
-    restaurants={useRestaurants()}
-    onSubmit={() => history.push('/main')}
-  />
+const NewExpenseContainer = ({ history }) => {
+
+  const currentUser = useCurrentUser()
+
+  return (
+    <NewExpense
+      restaurants={useRestaurants()}
+      onSubmit={(amount, date, restaurant) =>
+        api.expense.create(amount, date, currentUser.id, restaurant.id)
+          .then(() => history.push('/main'))}
+    />
+  )
+}
+
 
 const NewExpense = ({ restaurants, onSubmit }) => {
 
-  const [expense, setExpense] = useState(0)
-  const [restaurant, setRestaurant] = useState('')
+  const [amount, setAmount] = useState(0)
   const [date, setDate] = useState(new Date())
+  const [restaurant, setRestaurant] = useState('')
 
   return (
     <>
@@ -41,7 +51,7 @@ const NewExpense = ({ restaurants, onSubmit }) => {
 
       <DatePicker
         style={{ width: '100%', marginBottom: 10 }}
-        label="Basic example"
+        label="Fecha"
         value={date}
         onChange={setDate}
         animateYearScrolling
@@ -49,9 +59,9 @@ const NewExpense = ({ restaurants, onSubmit }) => {
 
       <TextField
         style={{ marginBottom: 10 }}
-        value={expense}
+        value={amount}
         type='positiveNumber'
-        onChange={e => setExpense(e.target.value)}
+        onChange={e => setAmount(e.target.value)}
         label='Ingrese el monto del gasto'
         fullWidth
       />
@@ -65,12 +75,13 @@ const NewExpense = ({ restaurants, onSubmit }) => {
 
       <Button
         style={{ width: '100%' }}
-        onClick={onSubmit}
+        onClick={() => onSubmit(amount, date, restaurant)}
         variant='contained'
         color='primary'
       >
         Enviar
       </Button>
+      
     </>
   )
 }
