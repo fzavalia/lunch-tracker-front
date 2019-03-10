@@ -1,14 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Button } from '@material-ui/core'
+import moment from 'moment';
 
-const Main = ({ onExpenseButtonClick }) =>
+const months = [
+  'Enero',
+  'Febrero',
+  'Marzo',
+  'Abril',
+  'Mayo',
+  'Junio',
+  'Julio',
+  'Agosto',
+  'Septiembre',
+  'Octubre',
+  'Noviembre',
+  'Diciembre'
+]
+
+const MainContainer = ({ history }) => {
+
+  const now = moment()
+
+  return (
+    <Main
+      user='Fernando Zavalia'
+      year={now.year()}
+      month={months[now.month()]}
+      budget='15000'
+      remaining='12000'
+      myExpenses='1340'
+      onExpenseButtonClick={() => history.push('/expenses')}
+    />
+  )
+}
+
+
+const Main = ({ user, year, month, budget, remaining, myExpenses, onExpenseButtonClick }) =>
   <>
-    <Value label='Usuario' value='Fernando Zavalia' />
-    <Value label='Año' value='2019' />
-    <Value label='Mes' value='Abril' />
-    <Value label='Presupuesto' value='15000' />
-    <Value label='Gastado' value='12200' />
-    <Value label='Mis Gastos' value='1340' />
+    <Value label='Usuario' value={user} />
+    <Value label='Año' value={year} />
+    <Value label='Mes' value={month} />
+    <Value label='Presupuesto' value={budget} />
+    <Value label='Gastado' value={remaining} />
+    <Value label='Mis Gastos' value={myExpenses} />
     <ExpenseButton onClick={onExpenseButtonClick} />
   </>
 
@@ -20,4 +54,4 @@ const Value = ({ label, value }) =>
 
 const ExpenseButton = ({ onClick }) => <Button onClick={onClick} style={{ width: '100%' }} variant='contained' color='primary'>Nuevo Gasto</Button>
 
-export default Main
+export default MainContainer
