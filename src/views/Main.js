@@ -7,15 +7,24 @@ import { months } from '../constants';
 
 const useMainData = (year, month) => {
 
+  const currentUser = useCurrentUser()
+
   const [budget, setBudget] = useState(0)
   const [remainingBudget, setRemainingBudget] = useState(0)
   const [currentUserExpenses, setCurrentUserExpenses] = useState(0)
 
   useEffect(() => {
-    api.budget.findForYearAndMonth(year, month)
-      .then(budget => {
+    Promise.all([
+      api.budget.findForYearAndMonth(year, month),
+      api.expense.spentOnMonth(year, month),
+      api.expense.spentOnMonthByUser(year, month, currentUser.id)
+    ])
+      .then(([budget, spent, spentByUser]) => {
+        console.log(budget, spent, spentByUser)
         if (budget) {
           setBudget(budget.amount)
+          setRemainingBudget(budget.amount - spent)
+          setCurrentUserExpenses(spentByUser)
         }
       })
   }, [])
@@ -41,8 +50,8 @@ const MainContainer = ({ history }) => {
       year={now.year()}
       month={months[now.month()]}
       budget={mainData.budget}
-      remaining='12000'
-      myExpenses='1340'
+      remaining={mainData.remainingBudget}
+      myExpenses={mainData.currentUserExpenses}
       onChangeUser={() => history.push('/users')}
       onCreateBudget={() => history.push('/budgets/create')}
       onCreateRestaurant={() => history.push('/restaurants/create')}
@@ -66,9 +75,8 @@ const Main = ({
   <>
 
     <Value label='Usuario' variant='h5' value={user} />
-    <Value label='Presupuesto' variant='h6' value={`${month}/${year} - $${budget}`} />
-    <Value label='Gastado' value={`$${remaining}`} />
-    <Value label='Mis Gastos' value={`$${myExpenses}`} />
+    <Value label='Presupuesto' variant='h6' value={`${month}/${year} - $${remaining} / $${budget}`} />
+    <Value label='Mis gastos de este mes' value={`$${myExpenses}`} />
 
     <Button
       style={{ width: '100%', marginBottom: 10 }}
