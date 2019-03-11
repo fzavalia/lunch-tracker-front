@@ -5,6 +5,7 @@ import Main from '../views/Main';
 import CreateExpense from '../views/CreateExpense';
 import CreateUser from '../views/CreateUser';
 import useCurrentUser from '../hooks/useCurrentUser';
+import CreateRestaurant from '../views/CreateRestaurant';
 
 const Routes = () => {
 
@@ -29,6 +30,7 @@ const Routes = () => {
         <Route exact path='/users/create' component={CreateUser} />
         <Route exact path='/main' component={Main} />
         <Route exact path='/expenses/create' component={CreateExpense} />
+        <Route exact path='/restaurants/create' component={CreateRestaurant} />
         <Route render={() => <Redirect to='/main' />} />
       </Switch>
     </Router>

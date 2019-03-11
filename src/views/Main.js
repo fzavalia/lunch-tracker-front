@@ -44,13 +44,25 @@ const MainContainer = ({ history }) => {
       remaining='12000'
       myExpenses='1340'
       onChangeUser={() => history.push('/users')}
-      onNewBudget={() => history.push('/budgets/create')}
-      onNewExpense={() => history.push('/expenses/create')}
+      onCreateBudget={() => history.push('/budgets/create')}
+      onCreateRestaurant={() => history.push('/restaurants/create')}
+      onCreateExpense={() => history.push('/expenses/create')}
     />
   )
 }
 
-const Main = ({ user, year, month, budget, remaining, myExpenses, onChangeUser, onNewBudget, onNewExpense }) =>
+const Main = ({
+  user,
+  year,
+  month,
+  budget,
+  remaining,
+  myExpenses,
+  onChangeUser,
+  onCreateBudget,
+  onCreateRestaurant,
+  onCreateExpense
+}) =>
   <>
     <Value label='Usuario' value={user} />
     <Value label='Año' value={year} />
@@ -58,9 +70,42 @@ const Main = ({ user, year, month, budget, remaining, myExpenses, onChangeUser, 
     <Value label='Presupuesto' value={budget} />
     <Value label='Gastado' value={remaining} />
     <Value label='Mis Gastos' value={myExpenses} />
-    <Button style={{ width: '100%', marginBottom: 10 }} onClick={onChangeUser} variant='contained' color='primary'>Cambiar de Usuario</Button>
-    <Button style={{ width: '100%', marginBottom: 10 }} onClick={onNewBudget} variant='contained' color='primary'>Nuevo Presupuesto</Button>
-    <Button style={{ width: '100%' }} onClick={onNewExpense} variant='contained' color='primary'>Nuevo Gasto</Button>
+
+    <Button
+      style={{ width: '100%', marginBottom: 10 }}
+      onClick={onChangeUser}
+      variant='contained'
+      color='primary'
+    >
+      Seleccionar Usuario
+    </Button>
+
+    <Button
+      style={{ width: '100%', marginBottom: 10 }}
+      onClick={onCreateBudget}
+      variant='contained'
+      color='primary'
+    >
+      Agregar Persupuesto
+    </Button>
+
+    <Button
+      style={{ width: '100%', marginBottom: 10 }}
+      onClick={onCreateRestaurant}
+      variant='contained'
+      color='primary'
+    >
+      Agregar Restaurant
+    </Button>
+
+    <Button
+      style={{ width: '100%' }}
+      onClick={onCreateExpense}
+      variant='contained'
+      color='primary'
+    >
+      Nuevo Gasto
+    </Button>
   </>
 
 const Value = ({ label, value }) =>

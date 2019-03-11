@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Select, MenuItem, FormControl, InputLabel, Typography } from '@material-ui/core'
-import TextField from '../components/TextField';
 import { DatePicker } from 'material-ui-pickers'
+import TextField from '../components/TextField';
 import api from '../api';
 import useCurrentUser from '../hooks/useCurrentUser';
 
@@ -81,7 +81,7 @@ const NewExpense = ({ restaurants, onSubmit }) => {
       >
         Enviar
       </Button>
-      
+
     </>
   )
 }
