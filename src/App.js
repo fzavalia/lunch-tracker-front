@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
-import UserSelection from './views/UserSelection';
-import Main from './views/Main';
-import CreateExpense from './views/CreateExpense';
-import CreateUser from './views/CreateUser';
-import useCurrentUser, { loadPersistedUser } from './hooks/useCurrentUser';
+import { loadPersistedUser } from './hooks/useCurrentUser';
 import { MuiPickersUtilsProvider } from "material-ui-pickers";
 import MomentUtils from '@date-io/moment';
 import Routes from './components/Routes';
+
+const Layout = ({ children }) =>
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <div style={{ width: '100%', maxWidth: 400 }}>
+      {children}
+    </div>
+  </div>
 
 const App = () => {
 
@@ -21,7 +23,9 @@ const App = () => {
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <Routes />
+      <Layout>
+        <Routes />
+      </Layout>
     </MuiPickersUtilsProvider>
   )
 }

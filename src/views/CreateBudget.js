@@ -30,7 +30,7 @@ const CreateBudget = ({ months, onSubmit }) => {
         variant='h4'
         align='center'
       >
-        Agregar Restaurant
+        Nuevo Presupuesto
       </Typography>
 
       <TextField

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Button } from '@material-ui/core'
+import { Typography, Button, Paper } from '@material-ui/core'
 import moment from 'moment';
 import useCurrentUser from '../hooks/useCurrentUser';
 import api from '../api';
@@ -65,19 +65,12 @@ const Main = ({
 }) =>
   <>
 
-    <Typography
-      style={{ marginBottom: 10 }}
-      variant='h4'
-      align='center'
-    >
-      {user}
-    </Typography>
+    <Value label='Usuario' variant='h5' value={user} />
+    <Value label='Presupuesto' variant='h6' value={`${month}/${year} - $${budget}`} />
+    <Value label='Gastado' value={`$${remaining}`} />
+    <Value label='Mis Gastos' value={`$${myExpenses}`} />
 
-    <Value label='Año' value={year} />
-    <Value label='Mes' value={month} />
-    <Value label='Presupuesto' value={budget} />
-    <Value label='Gastado' value={remaining} />
-    <Value label='Mis Gastos' value={myExpenses} />
+    <div style={{height: 20}}></div>
 
     <Button
       style={{ width: '100%', marginBottom: 10 }}
@@ -98,7 +91,7 @@ const Main = ({
     </Button>
 
     <Button
-      style={{ width: '100%', marginBottom: 10 }}
+      style={{ width: '100%', marginBottom: 30 }}
       onClick={onCreateRestaurant}
       variant='contained'
       color='primary'
@@ -107,7 +100,7 @@ const Main = ({
     </Button>
 
     <Button
-      style={{ width: '100%' }}
+      style={{ width: '100%', height: 100 }}
       onClick={onCreateExpense}
       variant='contained'
       color='primary'
@@ -116,10 +109,10 @@ const Main = ({
     </Button>
   </>
 
-const Value = ({ label, value }) =>
-  <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}>
-    <Typography style={{ alignSelf: 'flex-end' }} variant='body2'>{label}</Typography>
-    <Typography variant='body2'>{value}</Typography>
-  </div>
+const Value = ({ label, value, variant = 'h4' }) =>
+  <Paper style={{ padding: 10, marginBottom: 15 }}>
+    <Typography variant='caption'>{label}</Typography>
+    <Typography align='right' variant={variant}>{value}</Typography>
+  </Paper>
 
 export default MainContainer
