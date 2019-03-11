@@ -6,6 +6,7 @@ import CreateExpense from '../views/CreateExpense';
 import CreateUser from '../views/CreateUser';
 import useCurrentUser from '../hooks/useCurrentUser';
 import CreateRestaurant from '../views/CreateRestaurant';
+import CreateBudget from '../views/CreateBudget';
 
 const Routes = () => {
 
@@ -31,6 +32,7 @@ const Routes = () => {
         <Route exact path='/main' component={Main} />
         <Route exact path='/expenses/create' component={CreateExpense} />
         <Route exact path='/restaurants/create' component={CreateRestaurant} />
+        <Route exact path='/budgets/create' component={CreateBudget} />
         <Route render={() => <Redirect to='/main' />} />
       </Switch>
     </Router>

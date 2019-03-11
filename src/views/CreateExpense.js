@@ -62,7 +62,7 @@ const NewExpense = ({ restaurants, onSubmit }) => {
         value={amount}
         type='positiveNumber'
         onChange={e => setAmount(e.target.value)}
-        label='Ingrese el monto del gasto'
+        label='Pesos'
         fullWidth
       />
 
