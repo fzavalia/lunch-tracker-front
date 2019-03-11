@@ -70,8 +70,6 @@ const Main = ({
     <Value label='Gastado' value={`$${remaining}`} />
     <Value label='Mis Gastos' value={`$${myExpenses}`} />
 
-    <div style={{height: 20}}></div>
-
     <Button
       style={{ width: '100%', marginBottom: 10 }}
       onClick={onChangeUser}
@@ -91,7 +89,7 @@ const Main = ({
     </Button>
 
     <Button
-      style={{ width: '100%', marginBottom: 30 }}
+      style={{ width: '100%', marginBottom: 10 }}
       onClick={onCreateRestaurant}
       variant='contained'
       color='primary'
