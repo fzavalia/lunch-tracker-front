@@ -16,17 +16,18 @@ const handleChange = (e, type, onChange) => {
 
     const [parsedType, params] = type.split(':')
 
-    if (parsedType === 'positiveNumber') {
-      if (value) {
-        e.target.value = Math.max(0, value)
-      }
+    if (parsedType === 'positiveNumber' && value) {
+      e.target.value = Math.max(0, value)
     }
 
     if (parsedType === 'numberBetween') {
+
       const [min, max] = params.split('')
+
       if (value < min) {
         e.target.value = min
       }
+
       if (value > max) {
         e.target.value = max
       }
