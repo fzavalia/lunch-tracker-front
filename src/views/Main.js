@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Button, Paper, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, IconButton } from '@material-ui/core'
-import { ExpandMore, Cached } from '@material-ui/icons'
+import { Typography, Button, Paper, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, IconButton, Fab } from '@material-ui/core'
+import { ExpandMore, Cached, Money } from '@material-ui/icons'
 import moment from 'moment';
 import useCurrentUser from '../hooks/useCurrentUser';
 import api from '../api';
@@ -113,14 +113,10 @@ const Main = ({
         />
       </>}
 
-    <Button
-      style={{ width: '100%', height: 100 }}
-      onClick={onCreateExpense}
-      variant='contained'
-      color='primary'
-    >
-      Nuevo Gasto
-    </Button>
+    {/** Offset the bottom of the content so the Fab will not cover elements */}
+    <div style={{ height: 70 }}></div>
+
+    <Fab onClick={onCreateExpense} style={{ position: 'fixed', right: 20, bottom: 20 }} color='primary'><Money /></Fab>
   </>
 
 const Value = ({ label, value }) =>
@@ -134,21 +130,21 @@ const ExpensesExpansionPanel = ({ title, value, expenses }) =>
     <ExpansionPanelSummary expandIcon={<ExpandMore />}>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography style={{ position: 'relative', left: -12 }} variant='caption'>{title}</Typography>
-        <Typography variant='h6' align='right'>{value}</Typography>
+        <Typography style={{fontSize: '1rem'}} variant='h6' align='right'>{value}</Typography>
       </div>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
       <div style={{ width: '100%' }}>
         {expenses.map(expense =>
-          <>
-            <div key={expense.id} style={{ marginBottom: 10 }}>
+          <div key={expense.id}>
+            <div style={{ marginBottom: 10 }}>
               <ExpensesExpansionPanelValue title='Gasto' value={`$${expense.amount}`} />
               <ExpensesExpansionPanelValue title='Restaurant' value={expense.restaurant.name} />
               <ExpensesExpansionPanelValue title='Usuario' value={expense.user.name} />
               <ExpensesExpansionPanelValue title='Dia' value={moment(expense.date).format('DD')} />
             </div>
             <hr />
-          </>
+          </div>
         )}
       </div>
     </ExpansionPanelDetails>
