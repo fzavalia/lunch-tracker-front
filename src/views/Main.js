@@ -138,15 +138,9 @@ const Value = ({ label, value }) =>
 
 const groupByDay = expenses =>
   expenses.reduce((acc, next) => {
-
     const date = moment(next.date).format('DD-MM-YYYY')
-
-    if (acc[date] === undefined) {
-      acc[date] = []
-    }
-
+    if (acc[date] === undefined) acc[date] = []
     acc[date].push(next)
-
     return acc
   }, {})
 
