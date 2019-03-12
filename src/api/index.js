@@ -3,9 +3,7 @@ import budget from './budget'
 import restaurant from './restaurant'
 import expense from './expense'
 
-console.log(process.env.REACT_APP_API_HOST)
-
-const host = 'http://localhost:8000'
+const host = process.env.REACT_APP_API_HOST || 'http://localhost:8000'
 
 export default {
   user: user(host),
