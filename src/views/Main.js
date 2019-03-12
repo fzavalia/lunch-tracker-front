@@ -77,40 +77,20 @@ const Main = ({
   <>
 
     <Value label='Usuario' variant='h5' value={user} />
+
     <Value label='Mes' variant='h6' value={`${month} / ${year}`} />
 
-    <ExpansionPanel style={{ marginBottom: 15 }}>
-      <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography style={{ position: 'relative', left: -12 }} variant='caption'>Gastos / Presupuesto</Typography>
-          <Typography variant='h6'>${data.spent} / ${data.budget}</Typography>
-        </div>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <div style={{ width: '100%' }}>
-          {data.expensesForMonth.map(expense =>
-            <div key={expense.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography style={{ marginRight: 10 }}>${expense.amount}</Typography>
-              <Typography>{moment(expense.date).format('DD-MM-YYYY')}</Typography>
-            </div>)}
-        </div>
+    <ExpensesExpansionPanel
+      title='Gastos / Presupuesto'
+      value={`$${data.spent} / $${data.budget}`}
+      expenses={data.expensesForMonth}
+    />
 
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
-
-    {/* <Value label='Presupuesto' variant='h6' value={`$${data.remainingBudget} / $${data.budget}`} /> */}
-
-    <ExpansionPanel style={{ marginBottom: 15 }}>
-      <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography style={{ position: 'relative', left: -12 }} variant='caption'>Mis Gastos</Typography>
-          <Typography variant='h6'>${data.spentByCurrentUser}</Typography>
-        </div>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        {data.currentUserExpensesForMonth.map(expense => <Typography key={expense.id}>{expense.amount}</Typography>)}
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
+    <ExpensesExpansionPanel
+      title='Mis Gastos'
+      value={`$${data.spentByCurrentUser}`}
+      expenses={data.currentUserExpensesForMonth}
+    />
 
     <Button
       style={{ width: '100%', marginBottom: 10 }}
@@ -154,5 +134,36 @@ const Value = ({ label, value }) =>
     <Typography variant='caption'>{label}</Typography>
     <Typography variant='h6'>{value}</Typography>
   </Paper>
+
+const ExpensesExpansionPanel = ({ title, value, expenses }) =>
+  <ExpansionPanel style={{ marginBottom: 15 }}>
+    <ExpansionPanelSummary expandIcon={<ExpandMore />}>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography style={{ position: 'relative', left: -12 }} variant='caption'>{title}</Typography>
+        <Typography variant='h6'>{value}</Typography>
+      </div>
+    </ExpansionPanelSummary>
+    <ExpansionPanelDetails>
+      <div style={{ width: '100%' }}>
+        {expenses.map(expense =>
+          <>
+            <div key={expense.id} style={{ marginBottom: 10 }}>
+              <ExpensesExpansionPanelValue title='Gasto' value={`$${expense.amount}`} />
+              <ExpensesExpansionPanelValue title='Restaurant' value={expense.restaurant.name} />
+              <ExpensesExpansionPanelValue title='Usuario' value={expense.user.name} />
+              <ExpensesExpansionPanelValue title='Dia' value={moment(expense.date).format('DD')} />
+            </div>
+            <hr />
+          </>
+        )}
+      </div>
+    </ExpansionPanelDetails>
+  </ExpansionPanel>
+
+const ExpensesExpansionPanelValue = ({ title, value }) =>
+  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <Typography>{title}</Typography>
+    <Typography>{value}</Typography>
+  </div>
 
 export default MainContainer
