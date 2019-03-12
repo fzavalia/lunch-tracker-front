@@ -10,7 +10,7 @@ const CreateBudgetContainer = ({ history }) =>
     months={constants.months}
     onSubmit={(amount, year, month) =>
       api.budget.create(amount, year, month)
-        .then(() => history.push('/main'))}
+        .then(() => history.goBack())}
   />
 
 

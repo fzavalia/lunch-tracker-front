@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Button, Paper, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
-import { ExpandMore } from '@material-ui/icons'
+import { Typography, Button, Paper, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, IconButton } from '@material-ui/core'
+import { ExpandMore, Cached } from '@material-ui/icons'
 import moment from 'moment';
 import useCurrentUser from '../hooks/useCurrentUser';
 import api from '../api';
@@ -10,6 +10,7 @@ const useMainData = (year, month) => {
 
   const currentUser = useCurrentUser()
 
+  const [hasBudget, setHasBudget] = useState(false)
   const [budget, setBudget] = useState(0)
   const [spent, setRemainingBudget] = useState(0)
   const [spentByCurrentUser, setSpentByCurrentUser] = useState(0)
@@ -26,16 +27,20 @@ const useMainData = (year, month) => {
     ])
       .then(([budget, spent, spentByUser, expensesForMonth, currentUserExpensesForMonth]) => {
         if (budget) {
+          setHasBudget(true)
           setBudget(budget.amount)
           setRemainingBudget(spent)
           setSpentByCurrentUser(spentByUser)
           setExpensesForMonth(expensesForMonth)
           setCurrentUserExpensesForMonth(currentUserExpensesForMonth)
+        } else {
+          setHasBudget(false)
         }
       })
   }, [])
 
   return {
+    hasBudget,
     budget,
     spent,
     spentByCurrentUser,
@@ -48,7 +53,7 @@ const MainContainer = ({ history }) => {
 
   const now = moment()
   const currentUser = useCurrentUser()
-  const data = useMainData(now.years(), now.month())
+  const data = useMainData(now.year(), now.month())
 
   return (
     <Main
@@ -58,7 +63,6 @@ const MainContainer = ({ history }) => {
       data={data}
       onChangeUser={() => history.push('/users')}
       onCreateBudget={() => history.push('/budgets/create')}
-      onCreateRestaurant={() => history.push('/restaurants/create')}
       onCreateExpense={() => history.push('/expenses/create')}
     />
   )
@@ -71,53 +75,43 @@ const Main = ({
   data,
   onChangeUser,
   onCreateBudget,
-  onCreateRestaurant,
   onCreateExpense
 }) =>
   <>
 
-    <Value label='Usuario' variant='h5' value={user} />
+    <Value label='Usuario' variant='h5' value={
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <span style={{ marginRight: 10 }}>{user}</span>
+        <IconButton onClick={onChangeUser}><Cached /></IconButton>
+      </div>}
+    />
 
     <Value label='Mes' variant='h6' value={`${month} / ${year}`} />
 
-    <ExpensesExpansionPanel
-      title='Gastos / Presupuesto'
-      value={`$${data.spent} / $${data.budget}`}
-      expenses={data.expensesForMonth}
-    />
+    {!data.hasBudget &&
+      <Button
+        style={{ width: '100%', marginBottom: 10 }}
+        onClick={onCreateBudget}
+        variant='contained'
+        color='primary'
+      >
+        Agregar Presupuesto
+      </Button>}
 
-    <ExpensesExpansionPanel
-      title='Mis Gastos'
-      value={`$${data.spentByCurrentUser}`}
-      expenses={data.currentUserExpensesForMonth}
-    />
+    {data.hasBudget &&
+      <>
+        <ExpensesExpansionPanel
+          title='Gastos / Presupuesto'
+          value={`$${data.spent} / $${data.budget}`}
+          expenses={data.expensesForMonth}
+        />
 
-    <Button
-      style={{ width: '100%', marginBottom: 10 }}
-      onClick={onChangeUser}
-      variant='contained'
-      color='primary'
-    >
-      Seleccionar Usuario
-    </Button>
-
-    <Button
-      style={{ width: '100%', marginBottom: 10 }}
-      onClick={onCreateBudget}
-      variant='contained'
-      color='primary'
-    >
-      Agregar Presupuesto
-    </Button>
-
-    <Button
-      style={{ width: '100%', marginBottom: 10 }}
-      onClick={onCreateRestaurant}
-      variant='contained'
-      color='primary'
-    >
-      Agregar Restaurant
-    </Button>
+        <ExpensesExpansionPanel
+          title='Mis Gastos'
+          value={`$${data.spentByCurrentUser}`}
+          expenses={data.currentUserExpensesForMonth}
+        />
+      </>}
 
     <Button
       style={{ width: '100%', height: 100 }}
@@ -132,7 +126,7 @@ const Main = ({
 const Value = ({ label, value }) =>
   <Paper style={{ padding: 10, marginBottom: 15, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
     <Typography variant='caption'>{label}</Typography>
-    <Typography variant='h6'>{value}</Typography>
+    <Typography variant='h6' align='right'>{value}</Typography>
   </Paper>
 
 const ExpensesExpansionPanel = ({ title, value, expenses }) =>
@@ -140,7 +134,7 @@ const ExpensesExpansionPanel = ({ title, value, expenses }) =>
     <ExpansionPanelSummary expandIcon={<ExpandMore />}>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography style={{ position: 'relative', left: -12 }} variant='caption'>{title}</Typography>
-        <Typography variant='h6'>{value}</Typography>
+        <Typography variant='h6' align='right'>{value}</Typography>
       </div>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>

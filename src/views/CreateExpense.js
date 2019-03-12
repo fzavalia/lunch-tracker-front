@@ -24,15 +24,16 @@ const NewExpenseContainer = ({ history }) => {
   return (
     <NewExpense
       restaurants={useRestaurants()}
+      onCreateRestaurant={() => history.push('/restaurants/create')}
       onSubmit={(amount, date, restaurant) =>
         api.expense.create(amount, date, currentUser.id, restaurant.id)
-          .then(() => history.push('/main'))}
+          .then(() => history.goBack())}
     />
   )
 }
 
 
-const NewExpense = ({ restaurants, onSubmit }) => {
+const NewExpense = ({ restaurants, onCreateRestaurant, onSubmit }) => {
 
   const [amount, setAmount] = useState(0)
   const [date, setDate] = useState(new Date())
@@ -72,6 +73,15 @@ const NewExpense = ({ restaurants, onSubmit }) => {
           {restaurants.map(restaurant => <MenuItem key={restaurant.id} value={restaurant}>{restaurant.name}</MenuItem>)}
         </Select>
       </FormControl>
+
+      <Button
+        style={{ width: '100%', marginBottom: 10 }}
+        onClick={onCreateRestaurant}
+        variant='contained'
+        color='primary'
+      >
+        Crear Restaurant
+      </Button>
 
       <Button
         style={{ width: '100%' }}

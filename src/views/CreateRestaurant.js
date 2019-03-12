@@ -7,7 +7,7 @@ const CreateRestaurantContainer = ({ history }) =>
   <CreateRestaurant
     onSubmit={(name) =>
       api.restaurant.create(name)
-        .then(() => history.push('/main'))}
+        .then(() => history.goBack())}
   />
 
 
