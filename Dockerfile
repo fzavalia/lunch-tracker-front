@@ -1,6 +1,7 @@
 FROM node:10-alpine
 
-RUN npm install -g yarn && \
+RUN npm config set unsafe-perm true && \ 
+    npm install -g yarn && \
     yarn global add serve
 
 COPY public public
