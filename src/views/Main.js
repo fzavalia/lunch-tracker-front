@@ -139,7 +139,7 @@ const Value = ({ label, value }) =>
 const groupByDay = expenses =>
   expenses.reduce((acc, next) => {
 
-    const date = moment(next.date).format('DD')
+    const date = moment(next.date).format('DD-MM-YYYY')
 
     if (acc[date] === undefined) {
       acc[date] = []
@@ -160,17 +160,30 @@ const ExpensesExpansionPanel = ({ title, value, expenses }) =>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
       <div style={{ width: '100%' }}>
-        {expenses.map(expense =>
-          <div key={expense.id}>
-            <div style={{ marginBottom: 10 }}>
-              <ExpensesExpansionPanelValue title='Gasto' value={`$${expense.amount}`} />
-              <ExpensesExpansionPanelValue title='Restaurant' value={expense.restaurant.name} />
-              <ExpensesExpansionPanelValue title='Usuario' value={expense.user.name} />
-              <ExpensesExpansionPanelValue title='Dia' value={moment(expense.date).format('DD')} />
-            </div>
-            <hr />
-          </div>
-        )}
+        {(() => {
+
+          const groupedByDay = groupByDay(expenses)
+
+          return Object.entries(groupedByDay).map(([day, expenses]) => {
+            return (
+              <div key={day}>
+                <Typography><b>{day}</b></Typography>
+                <hr />
+                {expenses.map(expense =>
+                  <div key={expense.id} style={{ marginBottom: 10 }}>
+                    <ExpensesExpansionPanelValue title='Gasto' value={`$${expense.amount}`} />
+                    <ExpensesExpansionPanelValue title='Restaurant' value={expense.restaurant.name} />
+                    <ExpensesExpansionPanelValue title='Usuario' value={expense.user.name} />
+                    <ExpensesExpansionPanelValue title='Dia' value={moment(expense.date).format('DD')} />
+                  </div>
+                )}
+                <hr />
+              </div>
+            )
+          })
+          console.log()
+        })()}
+
       </div>
     </ExpansionPanelDetails>
   </ExpansionPanel>
