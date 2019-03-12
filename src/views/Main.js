@@ -107,7 +107,7 @@ const Main = ({
       variant='contained'
       color='primary'
     >
-      Agregar Persupuesto
+      Agregar Presupuesto
     </Button>
 
     <Button
