@@ -154,30 +154,20 @@ const ExpensesExpansionPanel = ({ title, value, expenses }) =>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
       <div style={{ width: '100%' }}>
-        {(() => {
-
-          const groupedByDay = groupByDay(expenses)
-
-          return Object.entries(groupedByDay).map(([day, expenses]) => {
-            return (
-              <div key={day}>
-                <Typography><b>{day}</b></Typography>
-                <hr />
-                {expenses.map(expense =>
-                  <div key={expense.id} style={{ marginBottom: 10 }}>
-                    <ExpensesExpansionPanelValue title='Gasto' value={`$${expense.amount}`} />
-                    <ExpensesExpansionPanelValue title='Restaurant' value={expense.restaurant.name} />
-                    <ExpensesExpansionPanelValue title='Usuario' value={expense.user.name} />
-                    <ExpensesExpansionPanelValue title='Dia' value={moment(expense.date).format('DD')} />
-                  </div>
-                )}
-                <hr />
+        {Object.entries(groupByDay(expenses)).map(([day, expenses]) =>
+          <div key={day}>
+            <Typography><b>{day}</b></Typography>
+            <hr />
+            {expenses.map(expense =>
+              <div key={expense.id} style={{ marginBottom: 10 }}>
+                <ExpensesExpansionPanelValue title='Gasto' value={`$${expense.amount}`} />
+                <ExpensesExpansionPanelValue title='Restaurant' value={expense.restaurant.name} />
+                <ExpensesExpansionPanelValue title='Usuario' value={expense.user.name} />
+                <ExpensesExpansionPanelValue title='Dia' value={moment(expense.date).format('DD')} />
               </div>
-            )
-          })
-          console.log()
-        })()}
-
+            )}
+            <hr />
+          </div>)}
       </div>
     </ExpansionPanelDetails>
   </ExpansionPanel>
