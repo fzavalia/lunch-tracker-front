@@ -5,18 +5,20 @@ import moment from 'moment';
 import useCurrentUser from '../hooks/useCurrentUser';
 import api from '../api';
 import { months } from '../constants';
-import {red, orange} from '@material-ui/core/colors'
+import { red, orange } from '@material-ui/core/colors'
 
 const useMainData = (year, month) => {
 
   const currentUser = useCurrentUser()
 
-  const [hasBudget, setHasBudget] = useState(false)
-  const [budget, setBudget] = useState(0)
-  const [spent, setRemainingBudget] = useState(0)
-  const [spentByCurrentUser, setSpentByCurrentUser] = useState(0)
-  const [expensesForMonth, setExpensesForMonth] = useState([])
-  const [currentUserExpensesForMonth, setCurrentUserExpensesForMonth] = useState([])
+  const [data, setData] = useState({
+    hasBudget: false,
+    budget: 0,
+    spent: 0,
+    spentByCurrentUser: 0,
+    expensesForMonth: [],
+    currentUserExpensesForMonth: []
+  })
 
   useEffect(() => {
     Promise.all([
@@ -26,28 +28,26 @@ const useMainData = (year, month) => {
       api.expense.listForMonth(1, 99, year, month),
       api.expense.listForMonthByUser(1, 99, year, month, currentUser.id),
     ])
-      .then(([budget, spent, spentByUser, expensesForMonth, currentUserExpensesForMonth]) => {
+      .then(([budget, spent, spentByCurrentUser, expensesForMonth, currentUserExpensesForMonth]) => {
         if (budget) {
-          setHasBudget(true)
-          setBudget(budget.amount)
-          setRemainingBudget(spent)
-          setSpentByCurrentUser(spentByUser)
-          setExpensesForMonth(expensesForMonth)
-          setCurrentUserExpensesForMonth(currentUserExpensesForMonth)
+          setData({
+            hasBudget: true,
+            budget: budget.amount,
+            spent,
+            spentByCurrentUser,
+            expensesForMonth,
+            currentUserExpensesForMonth
+          })
         } else {
-          setHasBudget(false)
+          setData({
+            ...data,
+            hasBudget: false
+          })
         }
       })
   }, [])
 
-  return {
-    hasBudget,
-    budget,
-    spent,
-    spentByCurrentUser,
-    expensesForMonth,
-    currentUserExpensesForMonth
-  }
+  return data
 }
 
 const MainContainer = ({ history }) => {
@@ -135,6 +135,20 @@ const Value = ({ label, value }) =>
     <Typography variant='caption'>{label}</Typography>
     <Typography variant='h6' align='right'>{value}</Typography>
   </Paper>
+
+const groupByDay = expenses =>
+  expenses.reduce((acc, next) => {
+
+    const date = moment(next.date).format('DD')
+
+    if (acc[date] === undefined) {
+      acc[date] = []
+    }
+
+    acc[date].push(next)
+
+    return acc
+  }, {})
 
 const ExpensesExpansionPanel = ({ title, value, expenses }) =>
   <ExpansionPanel style={{ marginBottom: 15 }}>
