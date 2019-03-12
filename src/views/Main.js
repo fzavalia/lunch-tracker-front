@@ -5,6 +5,7 @@ import moment from 'moment';
 import useCurrentUser from '../hooks/useCurrentUser';
 import api from '../api';
 import { months } from '../constants';
+import {red, orange} from '@material-ui/core/colors'
 
 const useMainData = (year, month) => {
 
@@ -68,6 +69,12 @@ const MainContainer = ({ history }) => {
   )
 }
 
+const spentColor = (spent, budget) => spent >= budget
+  ? red['900']
+  : spent >= 0.9 * budget
+    ? orange['900']
+    : undefined
+
 const Main = ({
   user,
   year,
@@ -102,7 +109,11 @@ const Main = ({
       <>
         <ExpensesExpansionPanel
           title='Gastos / Presupuesto'
-          value={`$${data.spent} / $${data.budget}`}
+          value={
+            <div>
+              <span style={{ color: spentColor(data.spent, data.budget) }}>{`$${data.spent}`}</span>
+              {` / $${data.budget}`}
+            </div>}
           expenses={data.expensesForMonth}
         />
 
@@ -130,7 +141,7 @@ const ExpensesExpansionPanel = ({ title, value, expenses }) =>
     <ExpansionPanelSummary expandIcon={<ExpandMore />}>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography style={{ position: 'relative', left: -12 }} variant='caption'>{title}</Typography>
-        <Typography style={{fontSize: '1rem'}} variant='h6' align='right'>{value}</Typography>
+        <Typography style={{ fontSize: '1rem' }} variant='h6' align='right'>{value}</Typography>
       </div>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
