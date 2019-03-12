@@ -5,6 +5,7 @@ RUN npm install -g yarn && \
 
 COPY public public
 COPY src src
+COPY .env.production .env
 COPY package.json .
 COPY yarn.lock .
 
