@@ -6,7 +6,6 @@ RUN npm config set unsafe-perm true && \
 
 COPY public public
 COPY src src
-COPY .env.production .env
 COPY package.json .
 COPY yarn.lock .
 
