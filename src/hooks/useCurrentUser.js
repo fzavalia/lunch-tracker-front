@@ -3,13 +3,12 @@ import api from "../api";
 
 let currentUser
 
+const subscriptions = []
+
 export const loadPersistedUser = async () => {
-
-  const persistedUser = localStorage.getItem('currentUser')
-
-  if (persistedUser) {
-    const updatedUser = await api.user.show(JSON.parse(persistedUser).id)
-    setCurrentUser(updatedUser)
+  if (hasPersistedUser()) {
+    const validatedUser = await validatePersistedUser(getPersistedUser())
+    setCurrentUser(validatedUser)
   }
 }
 
@@ -19,16 +18,13 @@ export const setCurrentUser = user => {
   subscriptions.forEach(subscription => subscription(currentUser))
 }
 
-const subscriptions = []
-
 const useCurrentUser = () => {
 
   const [user, setUser] = useState(currentUser)
 
   useEffect(() => {
-
+    
     const setUserSubscription = newCurrentUser => setUser(newCurrentUser)
-
     subscriptions.push(setUserSubscription)
 
     return () => {
@@ -38,5 +34,20 @@ const useCurrentUser = () => {
 
   return user
 }
+
+const hasPersistedUser = () => Boolean(localStorage.getItem('currentUser'))
+
+const getPersistedUser = () => {
+
+  const userInLocalStorage = localStorage.getItem('currentUser')
+
+  if (userInLocalStorage) {
+    return JSON.parse(userInLocalStorage)
+  }
+
+  return null
+}
+
+const validatePersistedUser = persistedUser => api.user.show(persistedUser.id)
 
 export default useCurrentUser
