@@ -4,8 +4,6 @@ import restaurant from './restaurant'
 import expense from './expense'
 import tokens from './tokens'
 
-console.log(process.env.REACT_APP_API_HOST)
-
 const host = process.env.REACT_APP_API_HOST || 'http://localhost:8000'
 
 export default {
