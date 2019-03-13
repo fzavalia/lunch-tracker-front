@@ -2,6 +2,7 @@ import user from './user'
 import budget from './budget'
 import restaurant from './restaurant'
 import expense from './expense'
+import tokens from './tokens'
 
 console.log(process.env.REACT_APP_API_HOST)
 
@@ -12,4 +13,5 @@ export default {
   budget: budget(host),
   restaurant: restaurant(host),
   expense: expense(host),
+  tokens: tokens(host),
 }
