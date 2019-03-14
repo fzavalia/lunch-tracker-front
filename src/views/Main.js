@@ -159,20 +159,28 @@ const ExpensesExpansionPanel = ({ title, value, expenses }) =>
             <Typography><b>{day}</b></Typography>
             <hr />
             {expenses.map(expense =>
-              <div key={expense.id} style={{ marginBottom: 10 }}>
-                <ExpensesExpansionPanelValue title='Gasto' value={`$${expense.amount}`} />
-                <ExpensesExpansionPanelValue title='Restaurant' value={expense.restaurant.name} />
-                <ExpensesExpansionPanelValue title='Usuario' value={expense.user.name} />
-                <ExpensesExpansionPanelValue title='Dia' value={moment(expense.date).format('DD')} />
-              </div>
-            )}
+              <Expense
+                key={expense.id}
+                amount={expense.amount}
+                restaurantName={expense.restaurant.name}
+                userName={expense.user.name}
+                date={expense.date}
+              />)}
             <hr />
           </div>)}
       </div>
     </ExpansionPanelDetails>
   </ExpansionPanel>
 
-const ExpensesExpansionPanelValue = ({ title, value }) =>
+const Expense = ({ amount, restaurantName, userName, date, hideUserName }) =>
+  <div style={{ marginBottom: 10 }}>
+    <ExpenseValue title='Gasto' value={`$${amount}`} />
+    <ExpenseValue title='Restaurant' value={restaurantName} />
+    {!hideUserName && <ExpenseValue title='Usuario' value={userName} />}
+    <ExpenseValue title='Dia' value={moment(date).format('DD')} />
+  </div>
+
+const ExpenseValue = ({ title, value }) =>
   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
     <Typography>{title}</Typography>
     <Typography>{value}</Typography>

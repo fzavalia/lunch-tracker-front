@@ -51,5 +51,12 @@ export default host => ({
       fetch.post(`${host}/expenses`)
         .set(getAuthHeader())
         .send({ amount, date, user, restaurant })
+        .then(res => res.body)),
+
+  delete: (id) =>
+    authBeforeRequest(() =>
+      fetch.delete(`${host}/expenses/${id}`)
+        .set(getAuthHeader())
+        .send()
         .then(res => res.body))
 })
