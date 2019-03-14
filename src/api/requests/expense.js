@@ -1,5 +1,6 @@
 import fetch from 'superagent'
 import { months } from './budget';
+import authBeforeRequest, { getAuthHeader } from '../authBeforeRequest';
 
 const spentOnMonthBase = async (host, year, month, user) => {
 
@@ -46,7 +47,10 @@ export default host => ({
     spentOnMonthBase(host, year, month, user),
 
   create: (amount, date, user, restaurant) =>
-    fetch.post(`${host}/expenses`)
-      .send({ amount, date, user, restaurant })
-      .then(res => res.body)
+    authBeforeRequest(() =>
+      fetch.post(`${host}/expenses`)
+        .set(getAuthHeader())
+        .send({ amount, date, user, restaurant })
+        .then(res => res.body))
+
 })
