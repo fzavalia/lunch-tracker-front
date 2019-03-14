@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Button, Paper, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, IconButton, Fab } from '@material-ui/core'
-import { ExpandMore, Cached, Money } from '@material-ui/icons'
+import { ExpandMore, Cached, Money, Delete } from '@material-ui/icons'
 import moment from 'moment';
 import useCurrentUser from '../hooks/useCurrentUser';
 import api from '../api';
@@ -65,6 +65,7 @@ const MainContainer = ({ history }) => {
       onChangeUser={() => history.push('/users')}
       onCreateBudget={() => history.push('/budgets/create')}
       onCreateExpense={() => history.push('/expenses/create')}
+      onDeleteExpense={expense => api.expense.delete(expense.id)}
     />
   )
 }
@@ -82,7 +83,8 @@ const Main = ({
   data,
   onChangeUser,
   onCreateBudget,
-  onCreateExpense
+  onCreateExpense,
+  onDeleteExpense,
 }) =>
   <>
 
@@ -107,7 +109,7 @@ const Main = ({
 
     {data.hasBudget &&
       <>
-        <ExpensesExpansionPanel
+        <Expenses
           title='Gastos / Presupuesto'
           value={
             <div>
@@ -115,12 +117,28 @@ const Main = ({
               {` / $${data.budget}`}
             </div>}
           expenses={data.expensesForMonth}
+          renderExpense={expense =>
+            <Expense
+              key={expense.id}
+              amount={expense.amount}
+              restaurantName={expense.restaurant.name}
+              userName={expense.user.name}
+              date={expense.date}
+            />}
         />
 
-        <ExpensesExpansionPanel
+        <Expenses
           title='Mis Gastos'
           value={`$${data.spentByCurrentUser}`}
           expenses={data.currentUserExpensesForMonth}
+          renderExpense={expense =>
+            <Expense
+              key={expense.id}
+              amount={expense.amount}
+              restaurantName={expense.restaurant.name}
+              date={expense.date}
+              onDelete={() => onDeleteExpense(expense)}
+            />}
         />
       </>}
 
@@ -144,7 +162,7 @@ const groupByDay = expenses =>
     return acc
   }, {})
 
-const ExpensesExpansionPanel = ({ title, value, expenses }) =>
+const Expenses = ({ title, value, expenses, renderExpense }) =>
   <ExpansionPanel style={{ marginBottom: 15 }}>
     <ExpansionPanelSummary expandIcon={<ExpandMore />}>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -155,30 +173,53 @@ const ExpensesExpansionPanel = ({ title, value, expenses }) =>
     <ExpansionPanelDetails>
       <div style={{ width: '100%' }}>
         {Object.entries(groupByDay(expenses)).map(([day, expenses]) =>
-          <div key={day}>
-            <Typography><b>{day}</b></Typography>
-            <hr />
-            {expenses.map(expense =>
-              <Expense
-                key={expense.id}
-                amount={expense.amount}
-                restaurantName={expense.restaurant.name}
-                userName={expense.user.name}
-                date={expense.date}
-              />)}
-            <hr />
-          </div>)}
+          <ExpensesGroup
+            day={day}
+            expenses={expenses}
+            renderExpense={renderExpense}
+          />)}
       </div>
     </ExpansionPanelDetails>
   </ExpansionPanel>
 
-const Expense = ({ amount, restaurantName, userName, date, hideUserName }) =>
-  <div style={{ marginBottom: 10 }}>
-    <ExpenseValue title='Gasto' value={`$${amount}`} />
-    <ExpenseValue title='Restaurant' value={restaurantName} />
-    {!hideUserName && <ExpenseValue title='Usuario' value={userName} />}
-    <ExpenseValue title='Dia' value={moment(date).format('DD')} />
+const ExpensesGroup = ({ day, expenses, renderExpense }) =>
+  <div>
+    <Typography><b>{day}</b></Typography>
+    <hr />{expenses.map(renderExpense)}<hr />
   </div>
+
+const Expense = ({ amount, restaurantName, date, userName, onDelete }) => {
+
+  const [toDelete, setToDelete] = useState(false)
+
+  return (
+    <div onClick={() => setToDelete(true)} style={{ marginBottom: 10, position: 'relative' }}>
+      <ExpenseValue title='Gasto' value={`$${amount}`} />
+      <ExpenseValue title='Restaurant' value={restaurantName} />
+      {userName && <ExpenseValue title='Usuario' value={userName} />}
+      <ExpenseValue title='Dia' value={moment(date).format('DD')} />
+      {toDelete &&
+        <div
+          onClick={onDelete}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: -5,
+            padding: '0 5px',
+            backgroundColor: '#ffffffba',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Delete />
+        </div>}
+    </div>
+  )
+}
+
 
 const ExpenseValue = ({ title, value }) =>
   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
