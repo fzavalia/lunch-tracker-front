@@ -52,5 +52,4 @@ export default host => ({
         .set(getAuthHeader())
         .send({ amount, date, user, restaurant })
         .then(res => res.body))
-
 })
