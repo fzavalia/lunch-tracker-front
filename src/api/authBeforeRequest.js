@@ -17,7 +17,15 @@ const authBeforeRequest = async req => {
     setToken(token)
   }
 
-  return await req()
+  try {
+    return await req()
+  } catch (e) {
+    if (e.status === 401) {
+      deleteToken()
+      return await authBeforeRequest(req)
+    }
+    return await Promise.reject(e)
+  }
 }
 
 export default authBeforeRequest
@@ -27,5 +35,7 @@ const getBearer = () => 'Bearer ' + getToken()
 const getToken = () => sessionStorage.getItem('token')
 
 const setToken = token => sessionStorage.setItem('token', token)
+
+const deleteToken = () => sessionStorage.removeItem('token')
 
 const hasToken = () => Boolean(getToken())
