@@ -12,9 +12,12 @@ const authBeforeRequest = async req => {
       return await Promise.reject('Auth canceled')
     }
 
-    const token = await api.tokens.create(password)
-
-    setToken(token)
+    try {
+      const token = await api.tokens.create(password)
+      setToken(token)
+    } catch (e) {
+      return await authBeforeRequest(req)
+    }
   }
 
   try {
