@@ -9,7 +9,7 @@ const authBeforeRequest = async req => {
     const password = prompt('password')
 
     if (password === null) {
-      throw new Error('Auth canceled')
+      return await Promise.reject('Auth canceled')
     }
 
     const token = await api.tokens.create(password)
