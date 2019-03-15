@@ -152,14 +152,6 @@ const Value = ({ label, value }) =>
     <Typography variant='h6' align='right'>{value}</Typography>
   </Paper>
 
-const groupByDay = expenses =>
-  expenses.reduce((acc, next) => {
-    const date = moment(next.date).format('DD-MM-YYYY')
-    if (acc[date] === undefined) acc[date] = []
-    acc[date].push(next)
-    return acc
-  }, {})
-
 const Expenses = ({ title, value, expenses, renderExpense }) =>
   <ExpansionPanel style={{ marginBottom: 15 }}>
     <ExpansionPanelSummary expandIcon={<ExpandMore />}>
@@ -179,6 +171,14 @@ const Expenses = ({ title, value, expenses, renderExpense }) =>
       </div>
     </ExpansionPanelDetails>
   </ExpansionPanel>
+
+const groupByDay = expenses =>
+  expenses.reduce((acc, next) => {
+    const date = moment(next.date).format('DD-MM-YYYY')
+    if (acc[date] === undefined) acc[date] = []
+    acc[date].push(next)
+    return acc
+  }, {})
 
 const ExpensesGroup = ({ day, expenses, renderExpense }) =>
   <div>
