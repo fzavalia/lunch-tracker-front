@@ -35,12 +35,6 @@ const MainContainer = ({ history }) => {
   )
 }
 
-const spentColor = (spent, budget) => spent >= budget
-  ? red['900']
-  : spent >= 0.9 * budget
-    ? orange['900']
-    : undefined
-
 const Main = ({
   user,
   year,
@@ -56,64 +50,80 @@ const Main = ({
   onDeleteExpense,
 }) =>
   <>
-    <Value label='Usuario' variant='h5' value={
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span style={{ marginRight: 10 }}>{user}</span>
-        <IconButton onClick={onChangeUser}><Cached /></IconButton>
-      </div>}
-    />
+    <CurrentUser user={user} onChange={onChangeUser} />
     <Value label='Mes' variant='h6' value={`${month} / ${year}`} />
-    {isNullOrUndefined(budgetAmount) &&
-      <Button
-        style={{ width: '100%', marginBottom: 10 }}
-        onClick={onCreateBudget}
-        variant='contained'
-        color='primary'
-      >
-        Agregar Presupuesto
-      </Button>}
-    {!isNullOrUndefined(budgetAmount) &&
-      <>
-        <Expenses
-          title='Gastos / Presupuesto'
-          value={
-            <div>
-              <span style={{ color: spentColor(spentByAll, budgetAmount) }}>{`$${spentByAll}`}</span>
-              {` / $${budgetAmount}`}
-            </div>}
-          expenses={expensesFromAll}
-          renderExpense={expense =>
-            <Expense
-              key={expense.id}
-              amount={expense.amount}
-              restaurantName={expense.restaurant.name}
-              userName={expense.user.name}
-              date={expense.date}
-            />}
-        />
-        <Expenses
-          title='Mis Gastos'
-          value={`$${spentByCurrentUser}`}
-          expenses={expensesFromCurrentUser}
-          renderExpense={expense =>
-            <Expense
-              key={expense.id}
-              amount={expense.amount}
-              restaurantName={expense.restaurant.name}
-              date={expense.date}
-              onDelete={() => onDeleteExpense(expense)}
-            />}
-        />
+    {isNullOrUndefined(budgetAmount)
+      ? <CreateBudgetButton onClick={onCreateBudget} />
+      : <>
+        <ExpensesFromAllUsers budget={budgetAmount} expenses={expensesFromAll} spent={spentByAll} />
+        <ExpensesFromCurrentUser spent={spentByCurrentUser} expenses={expensesFromCurrentUser} onDeleteExpense={onDeleteExpense} />
       </>}
-    {/** Offset the bottom of the content so the Fab will not cover elements */}
     <div style={{ height: 70 }}></div>
     <Fab onClick={onCreateExpense} style={{ position: 'fixed', right: 20, bottom: 20 }} color='primary'><Money /></Fab>
   </>
+
+const CurrentUser = ({ user, onChange }) =>
+  <Value label='Usuario' variant='h5' value={
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <span style={{ marginRight: 10 }}>{user}</span>
+      <IconButton onClick={onChange}><Cached /></IconButton>
+    </div>}
+  />
+
+const CreateBudgetButton = ({ onClick }) =>
+  <Button
+    style={{ width: '100%', marginBottom: 10 }}
+    onClick={onClick}
+    variant='contained'
+    color='primary'
+  >
+    Agregar Presupuesto
+  </Button>
+
+const spentColor = (spent, budget) => spent >= budget
+  ? red['900']
+  : spent >= 0.9 * budget
+    ? orange['900']
+    : undefined
+
+const ExpensesFromAllUsers = ({ spent, budget, expenses }) =>
+  <Expenses
+    title='Gastos / Presupuesto'
+    value={
+      <div>
+        <span style={{ color: spentColor(spent, budget) }}>{`$${spent}`}</span>
+        {` / $${budget}`}
+      </div>}
+    expenses={expenses}
+    renderExpense={expense =>
+      <Expense
+        key={expense.id}
+        amount={expense.amount}
+        restaurantName={expense.restaurant.name}
+        userName={expense.user.name}
+        date={expense.date}
+      />}
+  />
+
+const ExpensesFromCurrentUser = ({ spent, expenses, onDeleteExpense }) =>
+  <Expenses
+    title='Mis Gastos'
+    value={`$${spent}`}
+    expenses={expenses}
+    renderExpense={expense =>
+      <Expense
+        key={expense.id}
+        amount={expense.amount}
+        restaurantName={expense.restaurant.name}
+        date={expense.date}
+        onDelete={() => onDeleteExpense(expense)}
+      />}
+  />
 
 const Value = ({ label, value }) =>
   <Paper style={{ padding: 10, marginBottom: 15, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
     <Typography variant='caption'>{label}</Typography>
     <Typography variant='h6' align='right'>{value}</Typography>
   </Paper>
-  
+
 export default MainContainer
