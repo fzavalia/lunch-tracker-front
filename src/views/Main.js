@@ -8,9 +8,28 @@ import { months } from '../constants';
 import { red, orange } from '@material-ui/core/colors'
 import { isNullOrUndefined } from 'util';
 
-const useMainData = (year, month) => {
+const fetchMainData = (year, month, userId) =>
+  Promise.all([
+    api.budget.findForYearAndMonth(year, month),
+    api.expense.spentOnMonth(year, month),
+    api.expense.spentOnMonthByUser(year, month, userId),
+    api.expense.listForMonth(1, 99, year, month),
+    api.expense.listForMonthByUser(1, 99, year, month, userId),
+  ])
+    .then(([budget, spentByAll, spentByCurrentUser, expensesFromAll, expensesFromCurrentUser]) => {
+      if (!budget) {
+        throw new Error(`No budget for ${year} ${month}`)
+      }
+      return {
+        budgetAmount: budget.amount,
+        spentByAll,
+        spentByCurrentUser,
+        expensesFromAll,
+        expensesFromCurrentUser
+      }
+    })
 
-  const currentUser = useCurrentUser()
+const useMainDataFetcher = (year, month, userId) => {
 
   const [data, setData] = useState({
     budgetAmount: null,
@@ -20,35 +39,18 @@ const useMainData = (year, month) => {
     expensesFromCurrentUser: []
   })
 
-  useEffect(() => {
-    Promise.all([
-      api.budget.findForYearAndMonth(year, month),
-      api.expense.spentOnMonth(year, month),
-      api.expense.spentOnMonthByUser(year, month, currentUser.id),
-      api.expense.listForMonth(1, 99, year, month),
-      api.expense.listForMonthByUser(1, 99, year, month, currentUser.id),
-    ])
-      .then(([budget, spentByAll, spentByCurrentUser, expensesFromAll, expensesFromCurrentUser]) => {
-        if (budget) {
-          setData({
-            budgetAmount: budget.amount,
-            spentByAll,
-            spentByCurrentUser,
-            expensesFromAll,
-            expensesFromCurrentUser
-          })
-        }
-      })
-  }, [])
+  const fetch = () => fetchMainData(year, month, userId).then(setData).catch(() => { })
 
-  return data
+  return { data, fetch }
 }
 
 const MainContainer = ({ history }) => {
 
   const now = moment()
   const currentUser = useCurrentUser()
-  const data = useMainData(now.year(), now.month())
+  const { data, fetch } = useMainDataFetcher(now.year(), now.month(), currentUser.id)
+
+  fetch()
 
   return (
     <Main
@@ -64,7 +66,7 @@ const MainContainer = ({ history }) => {
       onChangeUser={() => history.push('/users')}
       onCreateBudget={() => history.push('/budgets/create')}
       onCreateExpense={() => history.push('/expenses/create')}
-      onDeleteExpense={expense => api.expense.delete(expense.id)}
+      onDeleteExpense={expense => api.expense.delete(expense.id).then(fetch)}
     />
   )
 }
@@ -82,8 +84,8 @@ const Main = ({
   budgetAmount,
   spentByAll,
   spentByCurrentUser,
-  expensesFromAll,
-  expensesFromCurrentUser,
+  expensesFromAll = [],
+  expensesFromCurrentUser = [],
   onChangeUser,
   onCreateBudget,
   onCreateExpense,
