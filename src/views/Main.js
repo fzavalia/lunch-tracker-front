@@ -193,7 +193,7 @@ const Expense = ({ amount, restaurantName, date, userName, onDelete }) => {
   const [toDelete, setToDelete] = useState(false)
 
   return (
-    <div onClick={() => setToDelete(true)} style={{ marginBottom: 10, position: 'relative' }}>
+    <div onClick={() => onDelete && setToDelete(true)} style={{ marginBottom: 10, position: 'relative' }}>
       <ExpenseValue title='Gasto' value={`$${amount}`} />
       <ExpenseValue title='Restaurant' value={restaurantName} />
       {userName && <ExpenseValue title='Usuario' value={userName} />}
