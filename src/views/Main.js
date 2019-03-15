@@ -6,18 +6,18 @@ import useCurrentUser from '../hooks/useCurrentUser';
 import api from '../api';
 import { months } from '../constants';
 import { red, orange } from '@material-ui/core/colors'
+import { isNullOrUndefined } from 'util';
 
 const useMainData = (year, month) => {
 
   const currentUser = useCurrentUser()
 
   const [data, setData] = useState({
-    hasBudget: false,
-    budget: 0,
-    spent: 0,
+    budgetAmount: null,
+    spentByAll: 0,
     spentByCurrentUser: 0,
-    expensesForMonth: [],
-    currentUserExpensesForMonth: []
+    expensesFromAll: [],
+    expensesFromCurrentUser: []
   })
 
   useEffect(() => {
@@ -28,20 +28,14 @@ const useMainData = (year, month) => {
       api.expense.listForMonth(1, 99, year, month),
       api.expense.listForMonthByUser(1, 99, year, month, currentUser.id),
     ])
-      .then(([budget, spent, spentByCurrentUser, expensesForMonth, currentUserExpensesForMonth]) => {
+      .then(([budget, spentByAll, spentByCurrentUser, expensesFromAll, expensesFromCurrentUser]) => {
         if (budget) {
           setData({
-            hasBudget: true,
-            budget: budget.amount,
-            spent,
+            budgetAmount: budget.amount,
+            spentByAll,
             spentByCurrentUser,
-            expensesForMonth,
-            currentUserExpensesForMonth
-          })
-        } else {
-          setData({
-            ...data,
-            hasBudget: false
+            expensesFromAll,
+            expensesFromCurrentUser
           })
         }
       })
@@ -61,7 +55,12 @@ const MainContainer = ({ history }) => {
       user={currentUser.name}
       year={now.year()}
       month={months[now.month()]}
-      data={data}
+      hasBudget={data.hasBudget}
+      budgetAmount={data.budgetAmount}
+      spentByAll={data.spentByAll}
+      spentByCurrentUser={data.spentByCurrentUser}
+      expensesFromAll={data.expensesFromAll}
+      expensesFromCurrentUser={data.expensesFromCurrentUser}
       onChangeUser={() => history.push('/users')}
       onCreateBudget={() => history.push('/budgets/create')}
       onCreateExpense={() => history.push('/expenses/create')}
@@ -80,24 +79,25 @@ const Main = ({
   user,
   year,
   month,
-  data,
+  budgetAmount,
+  spentByAll,
+  spentByCurrentUser,
+  expensesFromAll,
+  expensesFromCurrentUser,
   onChangeUser,
   onCreateBudget,
   onCreateExpense,
   onDeleteExpense,
 }) =>
   <>
-
     <Value label='Usuario' variant='h5' value={
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <span style={{ marginRight: 10 }}>{user}</span>
         <IconButton onClick={onChangeUser}><Cached /></IconButton>
       </div>}
     />
-
     <Value label='Mes' variant='h6' value={`${month} / ${year}`} />
-
-    {!data.hasBudget &&
+    {isNullOrUndefined(budgetAmount) &&
       <Button
         style={{ width: '100%', marginBottom: 10 }}
         onClick={onCreateBudget}
@@ -106,17 +106,16 @@ const Main = ({
       >
         Agregar Presupuesto
       </Button>}
-
-    {data.hasBudget &&
+    {!isNullOrUndefined(budgetAmount) &&
       <>
         <Expenses
           title='Gastos / Presupuesto'
           value={
             <div>
-              <span style={{ color: spentColor(data.spent, data.budget) }}>{`$${data.spent}`}</span>
-              {` / $${data.budget}`}
+              <span style={{ color: spentColor(spentByAll, budgetAmount) }}>{`$${spentByAll}`}</span>
+              {` / $${budgetAmount}`}
             </div>}
-          expenses={data.expensesForMonth}
+          expenses={expensesFromAll}
           renderExpense={expense =>
             <Expense
               key={expense.id}
@@ -126,11 +125,10 @@ const Main = ({
               date={expense.date}
             />}
         />
-
         <Expenses
           title='Mis Gastos'
-          value={`$${data.spentByCurrentUser}`}
-          expenses={data.currentUserExpensesForMonth}
+          value={`$${spentByCurrentUser}`}
+          expenses={expensesFromCurrentUser}
           renderExpense={expense =>
             <Expense
               key={expense.id}
@@ -141,10 +139,8 @@ const Main = ({
             />}
         />
       </>}
-
     {/** Offset the bottom of the content so the Fab will not cover elements */}
     <div style={{ height: 70 }}></div>
-
     <Fab onClick={onCreateExpense} style={{ position: 'fixed', right: 20, bottom: 20 }} color='primary'><Money /></Fab>
   </>
 
@@ -188,6 +184,19 @@ const ExpensesGroup = ({ day, expenses, renderExpense }) =>
     <hr />{expenses.map(renderExpense)}<hr />
   </div>
 
+const deleteOverlayStyle = {
+  position: 'absolute',
+  top: 0,
+  left: -5,
+  padding: '0 5px',
+  backgroundColor: '#ffffffba',
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
+
 const Expense = ({ amount, restaurantName, date, userName, onDelete }) => {
 
   const [toDelete, setToDelete] = useState(false)
@@ -198,24 +207,7 @@ const Expense = ({ amount, restaurantName, date, userName, onDelete }) => {
       <ExpenseValue title='Restaurant' value={restaurantName} />
       {userName && <ExpenseValue title='Usuario' value={userName} />}
       <ExpenseValue title='Dia' value={moment(date).format('DD')} />
-      {toDelete &&
-        <div
-          onClick={onDelete}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: -5,
-            padding: '0 5px',
-            backgroundColor: '#ffffffba',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Delete />
-        </div>}
+      {toDelete && <div onClick={onDelete} style={deleteOverlayStyle}><Delete /></div>}
     </div>
   )
 }
