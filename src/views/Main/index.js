@@ -101,7 +101,6 @@ const ExpensesFromAllUsers = ({ spent, budget, expenses }) =>
         amount={expense.amount}
         restaurantName={expense.restaurant.name}
         userName={expense.user.name}
-        date={expense.date}
       />}
   />
 
@@ -115,7 +114,6 @@ const ExpensesFromCurrentUser = ({ spent, expenses, onDeleteExpense }) =>
         key={expense.id}
         amount={expense.amount}
         restaurantName={expense.restaurant.name}
-        date={expense.date}
         onDelete={() => onDeleteExpense(expense)}
       />}
   />

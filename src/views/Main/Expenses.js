@@ -3,7 +3,7 @@ import { Typography, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetail
 import { ExpandMore, Delete } from '@material-ui/icons'
 import moment from 'moment';
 
-export const Expense = ({ amount, restaurantName, date, userName, onDelete }) => {
+export const Expense = ({ amount, restaurantName, userName, onDelete }) => {
 
   const [toDelete, setToDelete] = useState(false)
 
@@ -12,7 +12,6 @@ export const Expense = ({ amount, restaurantName, date, userName, onDelete }) =>
       <ExpenseValue title='Gasto' value={`$${amount}`} />
       <ExpenseValue title='Restaurant' value={restaurantName} />
       {userName && <ExpenseValue title='Usuario' value={userName} />}
-      <ExpenseValue title='Dia' value={moment(date).format('DD')} />
       {toDelete && <div onClick={onDelete} style={deleteOverlayStyle}><Delete /></div>}
     </div>
   )
