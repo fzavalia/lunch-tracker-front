@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../api';
 
 const useMainDataFetcher = (year, month, userId) => {
@@ -11,9 +11,15 @@ const useMainDataFetcher = (year, month, userId) => {
     expensesFromCurrentUser: []
   })
 
-  const fetch = () => fetchMainData(year, month, userId).then(setData).catch(() => { })
+  const [aux, setAux] = useState(1)
 
-  return { data, fetch }
+  useEffect(() => {
+    fetchMainData(year, month, userId).then(setData).catch(() => { })
+  }, [aux])
+
+  const refetch = () => setAux(aux * -1)
+
+  return { data, refetch }
 }
 
 export default useMainDataFetcher

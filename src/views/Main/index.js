@@ -14,9 +14,7 @@ const MainContainer = ({ history }) => {
 
   const now = moment()
   const currentUser = useCurrentUser()
-  const { data, fetch } = useMainDataFetcher(now.year(), now.month(), currentUser.id)
-
-  fetch()
+  const { data, refetch } = useMainDataFetcher(now.year(), now.month(), currentUser.id)
 
   return (
     <Main
@@ -32,7 +30,7 @@ const MainContainer = ({ history }) => {
       onChangeUser={() => history.push('/users')}
       onCreateBudget={() => history.push('/budgets/create')}
       onCreateExpense={() => history.push('/expenses/create')}
-      onDeleteExpense={expense => api.expense.delete(expense.id).then(fetch)}
+      onDeleteExpense={expense => api.expense.delete(expense.id).then(refetch)}
     />
   )
 }
