@@ -30,6 +30,7 @@ const Expenses = ({ title, value, expenses, renderExpense }) =>
       <div style={{ width: '100%' }}>
         {Object.entries(groupByDay(expenses)).map(([day, expenses]) =>
           <ExpensesGroup
+            key={day}
             day={day}
             expenses={expenses}
             renderExpense={renderExpense}
