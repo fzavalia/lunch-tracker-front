@@ -4,7 +4,11 @@ import restaurant from './requests/restaurant'
 import expense from './requests/expense'
 import tokens from './requests/tokens'
 
-const host = process.env.REACT_APP_API_HOST || 'http://localhost:8000'
+const host = process.env.REACT_APP_API_HOST
+
+if (!host) {
+  throw new Error('REACT_APP_API_HOST env var not defined')
+}
 
 const api = {
   user: user(host),

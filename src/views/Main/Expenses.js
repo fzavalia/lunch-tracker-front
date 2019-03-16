@@ -18,7 +18,7 @@ export const Expense = ({ amount, restaurantName, userName, onDelete }) => {
       setToDelete(false)
 
     document.addEventListener('mousedown', handleDocumentClick)
-    
+
     return () => {
       document.removeEventListener('mousedown', handleDocumentClick)
     }
