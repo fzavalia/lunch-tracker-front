@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Typography, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core'
 import { ExpandMore, Delete } from '@material-ui/icons'
 import moment from 'moment';
@@ -7,7 +7,30 @@ export const Expense = ({ amount, restaurantName, userName, onDelete }) => {
 
   const [toDelete, setToDelete] = useState(false)
 
-  const onDeleteWrapper = e => {
+  const deleteOverlay = useRef(null)
+
+  useEffect(() => {
+
+    const handleDocumentClick = e => (
+      deleteOverlay.current &&
+      e.target !== deleteOverlay.current &&
+      !deleteOverlay.current.contains(e.target)) &&
+      setToDelete(false)
+
+    document.addEventListener('mousedown', handleDocumentClick)
+    
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentClick)
+    }
+  }, [])
+
+  const onContainerClick = () => {
+    if (onDelete) {
+      setToDelete(true)
+    }
+  }
+
+  const onDeleteOverlayClick = e => {
     e.stopPropagation()
     if (window.confirm('Eliminar Gasto?')) {
       onDelete()
@@ -17,11 +40,11 @@ export const Expense = ({ amount, restaurantName, userName, onDelete }) => {
   }
 
   return (
-    <div onClick={() => onDelete && setToDelete(true)} style={{ marginBottom: 10, position: 'relative' }}>
+    <div onClick={onContainerClick} style={{ marginBottom: 10, position: 'relative' }}>
       <ExpenseValue title='Gasto' value={`$${amount}`} />
       <ExpenseValue title='Restaurant' value={restaurantName} />
       {userName && <ExpenseValue title='Usuario' value={userName} />}
-      {toDelete && <div onClick={onDeleteWrapper} style={deleteOverlayStyle}><Delete /></div>}
+      {toDelete && <div ref={deleteOverlay} onClick={onDeleteOverlayClick} style={deleteOverlayStyle}><Delete /></div>}
     </div>
   )
 }
