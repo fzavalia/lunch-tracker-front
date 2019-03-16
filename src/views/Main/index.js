@@ -62,66 +62,66 @@ const Main = ({
     <Fab onClick={onCreateExpense} style={{ position: 'fixed', right: 20, bottom: 20 }} color='primary'><Money /></Fab>
   </>
 
-const CurrentUser = ({ user, onChange }) =>
-  <Value label='Usuario' variant='h5' value={
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <span style={{ marginRight: 10 }}>{user}</span>
-      <IconButton onClick={onChange}><Cached /></IconButton>
-    </div>}
-  />
+  const CurrentUser = ({ user, onChange }) =>
+    <Value label='Usuario' variant='h5' value={
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <span style={{ marginRight: 10 }}>{user}</span>
+        <IconButton onClick={onChange}><Cached /></IconButton>
+      </div>}
+    />
 
-const CreateBudgetButton = ({ onClick }) =>
-  <Button
-    style={{ width: '100%', marginBottom: 10 }}
-    onClick={onClick}
-    variant='contained'
-    color='primary'
-  >
-    Agregar Presupuesto
+  const CreateBudgetButton = ({ onClick }) =>
+    <Button
+      style={{ width: '100%', marginBottom: 10 }}
+      onClick={onClick}
+      variant='contained'
+      color='primary'
+    >
+      Agregar Presupuesto
   </Button>
 
-const spentColor = (spent, budget) => spent >= budget
-  ? red['900']
-  : spent >= 0.9 * budget
-    ? orange['900']
-    : undefined
+  const spentColor = (spent, budget) => spent >= budget
+    ? red['900']
+    : spent >= 0.9 * budget
+      ? orange['900']
+      : undefined
 
-const ExpensesFromAllUsers = ({ spent, budget, expenses }) =>
-  <Expenses
-    title='Gastos / Presupuesto'
-    value={
-      <div>
-        <span style={{ color: spentColor(spent, budget) }}>{`$${spent}`}</span>
-        {` / $${budget}`}
-      </div>}
-    expenses={expenses}
-    renderExpense={expense =>
-      <Expense
-        key={expense.id}
-        amount={expense.amount}
-        restaurantName={expense.restaurant.name}
-        userName={expense.user.name}
-      />}
-  />
+  const ExpensesFromAllUsers = ({ spent, budget, expenses }) =>
+    <Expenses
+      title='Gastos / Presupuesto'
+      value={
+        <div>
+          <span style={{ color: spentColor(spent, budget) }}>{`$${spent}`}</span>
+          {` / $${budget}`}
+        </div>}
+      expenses={expenses}
+      renderExpense={expense =>
+        <Expense
+          key={expense.id}
+          amount={expense.amount}
+          restaurantName={expense.restaurant.name}
+          userName={expense.user.name}
+        />}
+    />
 
-const ExpensesFromCurrentUser = ({ spent, expenses, onDeleteExpense }) =>
-  <Expenses
-    title='Mis Gastos'
-    value={`$${spent}`}
-    expenses={expenses}
-    renderExpense={expense =>
-      <Expense
-        key={expense.id}
-        amount={expense.amount}
-        restaurantName={expense.restaurant.name}
-        onDelete={() => onDeleteExpense(expense)}
-      />}
-  />
+  const ExpensesFromCurrentUser = ({ spent, expenses, onDeleteExpense }) =>
+    <Expenses
+      title='Mis Gastos'
+      value={`$${spent}`}
+      expenses={expenses}
+      renderExpense={expense =>
+        <Expense
+          key={expense.id}
+          amount={expense.amount}
+          restaurantName={expense.restaurant.name}
+          onDelete={() => onDeleteExpense(expense)}
+        />}
+    />
 
-const Value = ({ label, value }) =>
-  <Paper style={{ padding: 10, marginBottom: 15, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-    <Typography variant='caption'>{label}</Typography>
-    <Typography variant='h6' align='right'>{value}</Typography>
-  </Paper>
+  const Value = ({ label, value }) =>
+    <Paper style={{ padding: 10, marginBottom: 15, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Typography variant='caption'>{label}</Typography>
+      <Typography variant='h6' align='right'>{value}</Typography>
+    </Paper>
 
-export default MainContainer
+  export default MainContainer

@@ -7,12 +7,21 @@ export const Expense = ({ amount, restaurantName, userName, onDelete }) => {
 
   const [toDelete, setToDelete] = useState(false)
 
+  const onDeleteWrapper = e => {
+    e.stopPropagation()
+    if (window.confirm('Eliminar Gasto?')) {
+      onDelete()
+    } else {
+      setToDelete(false)
+    }
+  }
+
   return (
     <div onClick={() => onDelete && setToDelete(true)} style={{ marginBottom: 10, position: 'relative' }}>
       <ExpenseValue title='Gasto' value={`$${amount}`} />
       <ExpenseValue title='Restaurant' value={restaurantName} />
       {userName && <ExpenseValue title='Usuario' value={userName} />}
-      {toDelete && <div onClick={onDelete} style={deleteOverlayStyle}><Delete /></div>}
+      {toDelete && <div onClick={onDeleteWrapper} style={deleteOverlayStyle}><Delete /></div>}
     </div>
   )
 }
