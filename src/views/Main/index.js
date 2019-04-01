@@ -16,6 +16,16 @@ const MainContainer = ({ history }) => {
   const currentUser = useCurrentUser()
   const { data, refetch } = useMainDataFetcher(now.year(), now.month(), currentUser.id)
 
+  const onUpdateBudget = async () => {
+    const newAmount = prompt('Ingrese el valor del presupuesto', data.budget.amount)
+    if (isNaN(newAmount)) {
+      alert('El valor debe ser un número valido')
+    } else {
+      await api.budget.update(data.budget.id, newAmount)
+      await refetch()
+    }
+  }
+
   return (
     <Main
       user={currentUser.name}
@@ -31,15 +41,7 @@ const MainContainer = ({ history }) => {
       onCreateBudget={() => history.push('/budgets/create')}
       onCreateExpense={() => history.push('/expenses/create')}
       onDeleteExpense={expense => api.expense.delete(expense.id).then(refetch)}
-      onUpdateBudget={async () => {
-        const newAmount = prompt('Ingrese el valor del presupuesto', data.budget.amount)
-        if (isNaN(newAmount)) {
-          alert('El valor debe ser un número valido')
-        } else {
-          await api.budget.update(data.budget.id, newAmount)
-          await refetch()
-        }
-      }}
+      onUpdateBudget={onUpdateBudget}
     />
   )
 }
