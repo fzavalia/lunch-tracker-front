@@ -15,5 +15,12 @@ export default host => ({
       fetch.post(`${host}/budgets`)
         .set(getAuthHeader())
         .send({ amount, year, month: months[month] })
+        .then(res => res.body)),
+
+  update: (id, amount) =>
+    authBeforeRequest(() =>
+      fetch.post(`${host}/budgets/${id}`)
+        .set(getAuthHeader())
+        .send({ amount })
         .then(res => res.body))
 })
