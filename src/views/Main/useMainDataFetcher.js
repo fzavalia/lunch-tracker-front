@@ -4,7 +4,7 @@ import api from '../../api';
 const useMainDataFetcher = (year, month, userId) => {
 
   const [data, setData] = useState({
-    budgetAmount: null,
+    budget: null,
     spentByAll: 0,
     spentByCurrentUser: 0,
     expensesFromAll: [],
@@ -37,7 +37,7 @@ const fetchMainData = (year, month, userId) =>
         throw new Error(`No budget for ${year} ${month}`)
       }
       return {
-        budgetAmount: budget.amount,
+        budget,
         spentByAll,
         spentByCurrentUser,
         expensesFromAll,
