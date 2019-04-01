@@ -49,7 +49,7 @@ export const Expense = ({ amount, restaurantName, userName, onDelete }) => {
   )
 }
 
-const Expenses = ({ title, value, expenses, renderExpense }) =>
+const Expenses = ({ title, value, expenses, renderExpense, renderBeforeExpenses }) =>
   <ExpansionPanel style={{ marginBottom: 15 }}>
     <ExpansionPanelSummary expandIcon={<ExpandMore />}>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -59,6 +59,7 @@ const Expenses = ({ title, value, expenses, renderExpense }) =>
     </ExpansionPanelSummary>
     <ExpansionPanelDetails>
       <div style={{ width: '100%' }}>
+        {renderBeforeExpenses && renderBeforeExpenses()}
         {Object.entries(groupByDay(expenses)).map(([day, expenses]) =>
           <ExpensesGroup
             key={day}
