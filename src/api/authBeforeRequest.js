@@ -35,10 +35,10 @@ export default authBeforeRequest
 
 const getBearer = () => 'Bearer ' + getToken()
 
-const getToken = () => sessionStorage.getItem('token')
+const getToken = () => localStorage.getItem('token')
 
-const setToken = token => sessionStorage.setItem('token', token)
+const setToken = token => localStorage.setItem('token', token)
 
-const deleteToken = () => sessionStorage.removeItem('token')
+const deleteToken = () => localStorage.removeItem('token')
 
 const hasToken = () => Boolean(getToken())
