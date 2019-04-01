@@ -19,7 +19,7 @@ export default host => ({
 
   update: (id, amount) =>
     authBeforeRequest(() =>
-      fetch.post(`${host}/budgets/${id}`)
+      fetch.put(`${host}/budgets/${id}`)
         .set(getAuthHeader())
         .send({ amount })
         .then(res => res.body))
